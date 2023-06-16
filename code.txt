@@ -1,0 +1,41 @@
+const express = require("express");
+require("dotenv").config();
+const app = express();
+const cors = require("cors");
+
+// Middleware
+app.use(express.json());
+app.use(cors());
+
+const { Configuration, OpenAIApi } = require("openai");
+
+// OpenAI API Configuration
+const config = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(config);
+
+// POST Request
+app.post("/summary", async (req, res) => {
+  const { story } = req.body;
+
+  const prompt = `Please summarize the following story:\n\n${story}\n\nSummary:`;
+  const completions = await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt,
+    max_tokens: 256,
+    temperature: 0.7,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  });
+  const summary = completions.data.choices[0].text;
+
+  res.json(summary);
+});
+
+// Server
+const port = 3001;
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
+});
