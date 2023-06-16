@@ -1,0 +1,7 @@
+.btn-hover {
+  transition: background-color 0.3s ease;
+}
+
+.btn-hover:hover {
+  background-color: #ffc107; /* Change the background color to the desired hover color */
+}
